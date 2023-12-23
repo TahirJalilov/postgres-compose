@@ -1,0 +1,40 @@
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:16.1-alpine3.19
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - my_projects
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+    volumes:
+       - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - my_projects
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+networks:
+  my_projects: 
+    name: my_projects
+    external: true
+
+volumes:
+    postgres_data:
+    pgadmin_data:
